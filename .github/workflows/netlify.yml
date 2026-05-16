@@ -19,7 +19,7 @@ jobs:
           node-version: '24' # Ajusta a la versión de Node que utilice tu proyecto
 
       - name: Instalar dependencias
-        run: npm ci # 'npm ci' es más rápido y seguro en entornos de CI/CD que 'npm install'
+        run: npm install # 'npm ci' es más rápido y seguro en entornos de CI/CD que 'npm install'
 
       - name: Ejecutar pruebas y validaciones
         run: npm test # Reemplaza con 'npm run lint' o tu comando de validación si no tienes tests configurados
