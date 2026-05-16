@@ -20,7 +20,7 @@ jobs:
           node-version: '24'
 
       - name: Instalar dependencias
-        run: npm ci # Cambiado a 'npm ci' por ser más rápido y exacto en entornos de CI/CD
+        run: npm install # Cambiado a 'npm ci' por ser más rápido y exacto en entornos de CI/CD
 
       - name: Ejecutar pruebas y validaciones
         run: npm test
