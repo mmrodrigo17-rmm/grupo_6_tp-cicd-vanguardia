@@ -1,0 +1,40 @@
+name: Validar y Desplegar a Netlify
+
+on:
+  push:
+    branches:
+      - main # Asegúrate de que coincida con el nombre de tu rama principal
+
+jobs:
+  build-test-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout del código
+        uses: actions/checkout@v4
+
+      - name: Configurar Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '24' # Ajusta a la versión de Node que utilice tu proyecto
+
+      - name: Instalar dependencias
+        run: npm ci # 'npm ci' es más rápido y seguro en entornos de CI/CD que 'npm install'
+
+      - name: Ejecutar pruebas y validaciones
+        run: npm test # Reemplaza con 'npm run lint' o tu comando de validación si no tienes tests configurados
+
+      # Descomenta las siguientes líneas si tu proyecto requiere un proceso de build (ej. React, Vue, Angular)
+      # - name: Construir proyecto
+      #   run: npm run build
+
+      - name: Desplegar en Netlify
+        uses: nwtgck/actions-netlify@v3.0
+        with:
+          publish-dir: './' # Cambia esto a './dist' o './build' si usaste el comando de build arriba
+          production-deploy: true
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          deploy-message: "Deploy automático por commit ${{ github.sha }}"
+        env:
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+          NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
