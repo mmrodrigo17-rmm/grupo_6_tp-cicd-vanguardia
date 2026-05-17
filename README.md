@@ -42,6 +42,7 @@ Una vez que el código es integrado y validado en la rama principal, la platafor
 - **Testing:** Jest, Supertest
 - **Control de Versiones & CI:** Git, GitHub, GitHub Actions
 - **Hosting / CD:** Netlify
+- LINK: https://grupo-6-tp-cicd-vanguardia.netlify.app/
 
 ## 💻 Ejecución Local
 
