@@ -38,18 +38,18 @@ jobs:
         uses: actions/checkout@v4
 
       # Ojo acá: si usamos React, Angular, Vue o algo que necesite build, dejamos estas líneas descomentadas para compilar todo.
-      - name: Configurar Node.js
-        uses: actions/setup-node@v4
-        with:
-           node-version: '24'
+      #- name: Configurar Node.js
+      #  uses: actions/setup-node@v4
+      #  with:
+      #     node-version: '24'
            
-      - name: Instalar dependencias
-        # Usamos 'npm ci' en vez de 'install' para que respete a rajatabla las versiones exactas del package-lock.json. Es más seguro para un entorno de deploy.
-        run: npm ci
+      #- name: Instalar dependencias
+      #  # Usamos 'npm ci' en vez de 'install' para que respete a rajatabla las versiones exactas del package-lock.json. Es más seguro para un entorno de deploy.
+      #  run: npm install
         
-      - name: Construir proyecto
-        # Compilamos el código. Atenti con asegurar que el script de 'build' esté bien configurado en nuestro package.json.
-        run: npm run build
+      #- name: Construir proyecto
+      #  # Compilamos el código. Atenti con asegurar que el script de 'build' esté bien configurado en nuestro package.json.
+      #  run: npm run build
 
       - name: Desplegar en Netlify
         uses: nwtgck/actions-netlify@v3.0 # Usamos una action de la comunidad que nos resuelve la integración.
