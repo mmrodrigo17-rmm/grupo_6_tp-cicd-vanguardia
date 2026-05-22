@@ -50,5 +50,8 @@ Si deseás clonar y correr este proyecto en tu entorno local, seguí estos pasos
 
 1. **Clonar el repositorio:**
    ```bash
-   git clone [https://github.com/tu-usuario/grupo_6_tp-cicd-vanguardia.git](https://github.com/tu-usuario/grupo_6_tp-cicd-vanguardia.git)
+   mkdir grupo_6_tp-cicd-vanguardia
    cd grupo_6_tp-cicd-vanguardia
+   git clone https://github.com/mmrodrigo17-rmm/grupo_6_tp-cicd-vanguardia.git
+   
+         

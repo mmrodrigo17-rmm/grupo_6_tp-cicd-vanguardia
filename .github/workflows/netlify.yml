@@ -1,53 +1,65 @@
+# Le ponemos un nombre descriptivo para encontrar la pipeline al toque en la pestaña de Actions.
 name: Validar y Desplegar a Netlify
 
+# Acá le decimos a GitHub cuándo tiene que disparar esto.
 on:
   push:
     branches:
+      # Configuramos que se ejecute únicamente cuando pusheamos o mergeamos algo a la rama principal.
       - main 
+
 jobs:
+  # Arrancamos con el primer job: correr los tests. La regla es clara: si esto pincha, no se sube nada a producción.
   test:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-latest # Levantamos una maquinita virtual con el último Ubuntu, un clásico para estos casos.
     steps:
       - name: Checkout del código
-        uses: actions/checkout@v4
+        uses: actions/checkout@v4 # Nos traemos el código del repo para que la action tenga con qué trabajar.
 
       - name: Configurar Node.js
         uses: actions/setup-node@v4
         with:
+          # Seteamos Node en la versión 24. Chequeemos que esta versión coincida con la que usamos en local.
           node-version: '24'
 
       - name: Instalar dependencias
-        run: npm install
+        run: npm install # Nos bajamos todos los paquetes que definimos en el package.json.
 
       - name: Ejecutar pruebas y validaciones
-        run: npm test
+        run: npm test # Corremos los tests y cruzamos los dedos para que todo dé en verde.
 
+  # Segundo job: si los tests pasaron, mandamos la app a producción.
   deploy:
     runs-on: ubuntu-latest
-    needs: test
+    needs: test # ¡Importantísimo! Le avisamos a GitHub que este job tiene que esperar a que 'test' termine y sea exitoso.
     
     steps:
       - name: Checkout del código
         uses: actions/checkout@v4
 
-      # Descomenta las siguientes líneas si tu proyecto requiere compilar código antes de subirlo
+      # Ojo acá: si usamos React, Angular, Vue o algo que necesite build, dejamos estas líneas descomentadas para compilar todo.
       - name: Configurar Node.js
         uses: actions/setup-node@v4
         with:
            node-version: '24'
+           
       - name: Instalar dependencias
+        # Usamos 'npm ci' en vez de 'install' para que respete a rajatabla las versiones exactas del package-lock.json. Es más seguro para un entorno de deploy.
         run: npm ci
+        
       - name: Construir proyecto
+        # Compilamos el código. Atenti con asegurar que el script de 'build' esté bien configurado en nuestro package.json.
         run: npm run build
 
-        
       - name: Desplegar en Netlify
-        uses: nwtgck/actions-netlify@v3.0
+        uses: nwtgck/actions-netlify@v3.0 # Usamos una action de la comunidad que nos resuelve la integración.
         with:
-          publish-dir: './' # Cambia esto a './dist' o './build' si usas un comando de build
-          production-deploy: true
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          deploy-message: "Deploy automático por commit ${{ github.sha }}"
+          # Si tenemos un paso de build arriba, acá generalmente tenemos que cambiar './' por './dist' o './build', que es la carpeta que queremos subir.
+          publish-dir: './' 
+          production-deploy: true # Le mandamos mecha directo al entorno de producción de Netlify.
+          github-token: ${{ secrets.GITHUB_TOKEN }} # Token automático para que la action pueda reportar el estado en el PR o commit.
+          deploy-message: "Deploy automático por commit ${{ github.sha }}" # Un mensajito piola para identificar rápido en Netlify qué commit disparó esta subida.
         env:
+          # Las credenciales que sacamos de Netlify. Obviamente, las leemos de los secrets del repo, jamás hardcodeadas en este archivo.
           NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
           NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
